@@ -1,12 +1,16 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-import time
+from selenium.webdriver.support.ui import Select
 from webdriver_manager.chrome import ChromeDriverManager
+import getpass
+import time
 
+#inputs
 #time in text format. may need to change later. 
 registration_time = '03:00 PM'
 event = 'WEC'
@@ -19,13 +23,17 @@ except:
     print('time format is wrong')
     exit()
 
+#add ublock for ad blocking
 op = Options()
 op.add_extension('./ublock.crx')
+#remove notifcations popup
+prefs = {"profile.default_content_setting_values.notifications" : 2}
+op.add_experimental_option("prefs",prefs)
 
-#currently for chrome v100
+#set up chrome browser
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=op)
-#driver = webdriver.Chrome(r"./chromedriver", options=op)
 
+#open up webpage
 driver.get("http://imleagues.com/spa/fitness/cbf1b9ddc23e46a78270684b9ce053da/home")
 
 #wait until page is loaded to run, quit after 10 seconds if events aren't showing up
@@ -36,7 +44,7 @@ except:
     driver.quit()
     exit()
 
-
+#Full event names from shorthand
 events = {'WEC': 'WEC Fitness Center Registration', 
           'Swim':'Open Swim', 
           'Honors':'Warren St. Fitness Center Registration', 
@@ -44,6 +52,7 @@ events = {'WEC': 'WEC Fitness Center Registration',
 
 event_name = events[event]
 
+#main code
 try:
     event_names = driver.find_elements(by=By.CLASS_NAME, value="event-title")
     times = driver.find_elements(by=By.CLASS_NAME, value="event-text")
@@ -75,7 +84,53 @@ try:
 except:
     print('could not find session to sign up for')
 
-#keep browser open until button press
+#sign in
+try:
+    dropdown = driver.find_element(by=By.XPATH, value = '//*[@title="Select School/Organization"]')
+    dropdown.click()
+except:
+    print('school dropdown not being found')
+    driver.quit()
+    exit()
+
+time.sleep(2)
+
+try:
+    search_box = driver.find_element(by=By.XPATH, value = '//*[@title="search box"]')
+    search_box.send_keys('NJIT')
+    search_box.send_keys(Keys.RETURN)
+except:
+    print('school search not working')
+    driver.quit()
+    exit()
+
+try:
+    email_box = driver.find_element(by=By.XPATH, value = '//*[@name="email"]')
+    email_box.send_keys('je265@njit.edu')
+    email_box.send_keys(Keys.RETURN)
+except:
+    print('email input not working')
+    driver.quit()
+    exit()
+
+try:
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "password")))
+except:
+    print('Page load error')
+    driver.quit()
+    exit()
+
+
+password = getpass.getpass('please enter password: ')
+
+try:
+    password_box = driver.find_element(by=By.XPATH, value = '//*[@name="password"]')
+    password_box.send_keys(password)
+    password_box.send_keys(Keys.RETURN)
+except:
+    print('password not working')
+    driver.quit()
+    exit()
+
+#keep browser open until button press (for testing only)
 input('press enter to close browser')
-
-
