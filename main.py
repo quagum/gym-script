@@ -1,14 +1,24 @@
 from selenium import webdriver
+from selenium.webdriver.common import by
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 import time
+from webdriver_manager.chrome import ChromeDriverManager
+
+
+
+op = Options()
+op.add_extension('./ublock.crx')
 
 #currently for chrome v100
-driver = webdriver.Chrome(r"./chromedriver")
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=op)
+#driver = webdriver.Chrome(r"./chromedriver", options=op)
 
 #need to fix? 
 #selenium.common.exceptions.WebDriverException: Message: tab crashed
 driver.get("http://imleagues.com/spa/fitness/cbf1b9ddc23e46a78270684b9ce053da/home")
 
-time.sleep(5)
+time.sleep(10)
 
 #driver.maximize_window()
 #time.sleep(10)
@@ -23,11 +33,16 @@ events = {'WEC': 'WEC Fitness Center Registration',
 
 event_name = events[event]
 
-event_row = driver.find_element_by_class_name("event-item bottom-line")
+try:
+    event_row = driver.find_element_by_class_name('event-item bottom-line')
+    #event_row = driver.find_element(by=By.CLASS_NAME, value = "event-item bottom-line")
+    event_row = driver.find_element(by=By.CLASS_NAME, value=name)
 
-text = event_row.text
+    text = event_row.text
 
-print(text)
+    print(text)
+except:
+    print('could not find element')
 
 #class="event-item bottom-line" <- class name of div for each sign up row
 
