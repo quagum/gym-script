@@ -76,10 +76,15 @@ try:
     #find a way to obtain event again by index. 
     #print(driver.find_element(By.xpath("//input[@class = 'event-text'][position()=8]")).text)
     
-    #use following command to locate sign up button following appropriate event
+    #use "following" command to locate sign up button following appropriate event
 
     #click sign up button
-    
+
+    sign_up_button = driver.find_element(by=By.XPATH, value = '//*[@class="btn btn-success"]')
+    print(sign_up_button.text)
+    sign_up_button.click()
+
+    input('press enter to continue')
 
 except:
     print('could not find session to sign up for')
@@ -120,7 +125,7 @@ except:
     driver.quit()
     exit()
 
-
+#todo: figure out password storage solution
 password = getpass.getpass('please enter password: ')
 
 try:
