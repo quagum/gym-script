@@ -78,8 +78,9 @@ try:
     
     #use "following" command to locate sign up button following appropriate event
 
-    #click sign up button
 
+    #current status: clicking 1st sign up button
+    #click sign up button
     sign_up_button = driver.find_element(by=By.XPATH, value = '//*[@class="btn btn-success"]')
     print(sign_up_button.text)
     sign_up_button.click()
@@ -134,6 +135,24 @@ try:
     password_box.send_keys(Keys.RETURN)
 except:
     print('password not working')
+    driver.quit()
+    exit()
+
+#Actually click sign up after login
+#currently not working? 
+#explicit wait may need editing
+try:
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located(By.XPATH,'//*[@class=btn btn-primary"]'))
+except:
+    print('Page load error')
+    driver.quit()
+    exit()
+try: 
+    sign_up_button2 = driver.find_element(by=By.XPATH, value = '//*[@class=btn btn-primary"]')
+    sign_up_button2.click()
+    
+except:
+    print('sign up button not found or working')
     driver.quit()
     exit()
 
