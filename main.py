@@ -7,8 +7,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from webdriver_manager.chrome import ChromeDriverManager
-import getpass
 import time
+import os
 
 #inputs
 #time in text format. may need to change later. 
@@ -112,7 +112,8 @@ except:
 
 try:
     email_box = driver.find_element(by=By.XPATH, value = '//*[@name="email"]')
-    email_box.send_keys('je265@njit.edu')
+    email = os.getenv("email")
+    email_box.send_keys(email)
     email_box.send_keys(Keys.RETURN)
 except:
     print('email input not working')
@@ -126,8 +127,7 @@ except:
     driver.quit()
     exit()
 
-#todo: figure out password storage solution
-password = getpass.getpass('please enter password: ')
+password = os.getenv("password")
 
 try:
     password_box = driver.find_element(by=By.XPATH, value = '//*[@name="password"]')
