@@ -8,12 +8,18 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from webdriver_manager.chrome import ChromeDriverManager
 import time
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 #inputs
 #time in text format. may need to change later. 
-registration_time = '03:00 PM'
+registration_time = '05:00 PM'
 event = 'WEC'
+
+email = os.getenv("email")
+print(email)
 
 #validate time input, exits if incorrect (could use a bit more fixing like checking if hour is valid)
 try:
@@ -52,7 +58,22 @@ events = {'WEC': 'WEC Fitness Center Registration',
 
 event_name = events[event]
 
-#main code
+event_names = driver.find_elements(by=By.XPATH, value='//*[@id="imlBodyMain"]/div/div[1]/div[2]/div[1]/div/div[5]/week-calendar/div[2]/div[2]/div/div')
+index = 0
+for x in range(len(event_names)):
+    text = event_names[x].text
+    if (event_name in text and registration_time in text):
+        index = x
+
+print(index+1)
+
+targeted_button = driver.find_element(by=By.XPATH, value = '//*[@id="imlBodyMain"]/div/div[1]/div[2]/div[1]/div/div[5]/week-calendar/div[2]/div[2]/div/div[' + str(index+1) +']/a/div/div[2]/div[1]/button' )
+targeted_button.click()
+
+#/html/body/div[3]/div[1]/div[11]/div/div[2]/div/div[1]/div[2]/div[1]/div/div[5]/week-calendar/div[2]/div[2]/div/div[30]/a/div/div[2]/div[1]/button
+
+
+""" #main code
 try:
     event_names = driver.find_elements(by=By.CLASS_NAME, value="event-title")
     times = driver.find_elements(by=By.CLASS_NAME, value="event-text")
@@ -88,7 +109,14 @@ try:
     input('press enter to continue')
 
 except:
-    print('could not find session to sign up for')
+    print('could not find session to sign up for') """
+
+try:
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@title="search box"]')))
+except:
+    print('Page load error')
+    driver.quit()
+    exit()
 
 #sign in
 try:
@@ -99,7 +127,6 @@ except:
     driver.quit()
     exit()
 
-time.sleep(2)
 
 try:
     search_box = driver.find_element(by=By.XPATH, value = '//*[@title="search box"]')
@@ -109,6 +136,8 @@ except:
     print('school search not working')
     driver.quit()
     exit()
+
+
 
 try:
     email_box = driver.find_element(by=By.XPATH, value = '//*[@name="email"]')
@@ -120,16 +149,17 @@ except:
     driver.quit()
     exit()
 
+
 try:
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "password")))
 except:
-    print('Page load error')
+    print('password load error')
+    
     driver.quit()
     exit()
 
-password = os.getenv("password")
-
 try:
+    password = os.getenv("password")
     password_box = driver.find_element(by=By.XPATH, value = '//*[@name="password"]')
     password_box.send_keys(password)
     password_box.send_keys(Keys.RETURN)
@@ -142,17 +172,20 @@ except:
 #currently not working? 
 #explicit wait may need editing
 try:
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located(By.XPATH,'//*[@class=btn btn-primary"]'))
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[3]/div[1]/div[11]/div/div[2]/div/div[1]/div[2]/div[1]/div/div/div[2]/div[3]/div/div/button')))
 except:
-    print('Page load error')
     driver.quit()
     exit()
+
+sign_up_button2 = driver.find_element(by=By.XPATH, value = '/html/body/div[3]/div[1]/div[11]/div/div[2]/div/div[1]/div[2]/div[1]/div/div/div[2]/div[3]/div/div/button')
+sign_up_button2.click()
+
 try: 
-    sign_up_button2 = driver.find_element(by=By.XPATH, value = '//*[@class=btn btn-primary"]')
+    sign_up_button2 = driver.find_element(by=By.XPATH, value = '/html/body/div[3]/div[1]/div[11]/div/div[2]/div/div[1]/div[2]/div[1]/div/div/div[2]/div[3]/div/div/button')
     sign_up_button2.click()
-    
 except:
     print('sign up button not found or working')
+    input('press enter to close browser')
     driver.quit()
     exit()
 
