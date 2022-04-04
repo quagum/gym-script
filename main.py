@@ -15,7 +15,7 @@ load_dotenv()
 
 #inputs
 #time in text format. may need to change later. 
-registration_time = '05:00 PM'
+registration_time = '06:00 PM'
 event = 'WEC'
 
 email = os.getenv("email")
@@ -33,7 +33,10 @@ except:
 op = Options()
 op.add_extension('./ublock.crx')
 #remove notifcations popup
-prefs = {"profile.default_content_setting_values.notifications" : 2}
+prefs = {"profile.default_content_setting_values.notifications" : 2, 
+        "credentials_enable_service": False,
+        "profile.password_manager_enabled": False}
+        
 op.add_experimental_option("prefs",prefs)
 
 #set up chrome browser
