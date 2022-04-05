@@ -67,8 +67,6 @@ for x in range(len(event_names)):
     if (event_name in text and registration_time in text):
         index = x
 
-print(index+1)
-
 #click 1st sign up button with correct index
 try:
     targeted_button = driver.find_element(by=By.XPATH, value = '//*[@id="imlBodyMain"]/div/div[1]/div[2]/div[1]/div/div[5]/week-calendar/div[2]/div[2]/div/div[' + str(index+1) +']/a/div/div[2]/div[1]/button' )
