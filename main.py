@@ -15,12 +15,10 @@ load_dotenv()
 
 #inputs
 #time in text format. may need to change later. 
-registration_time = '06:00 PM'
+registration_time = '09:00 PM'
 event = 'WEC'
 
 email = os.getenv("email")
-print(email)
-
 #validate time input, exits if incorrect (could use a bit more fixing like checking if hour is valid)
 try:
     assert len(registration_time) == 8 and ('PM' in registration_time or 'AM' in registration_time) and registration_time[2] == ':' 
@@ -32,11 +30,17 @@ except:
 #add ublock for ad blocking
 op = Options()
 op.add_extension('./ublock.crx')
-#remove notifcations popup
+""" op.add_argument("--headless")
+op.add_argument("--disable-gpu")
+op.add_argument("--disable-extensions")
+op.add_argument("--disable-dev-shm-usage")
+op.add_argument("--no-sandbox") """
+
+#remove notifications popup
 prefs = {"profile.default_content_setting_values.notifications" : 2, 
         "credentials_enable_service": False,
         "profile.password_manager_enabled": False}
-        
+
 op.add_experimental_option("prefs",prefs)
 
 #set up chrome browser
@@ -177,11 +181,14 @@ except:
 try:
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[3]/div[1]/div[11]/div/div[2]/div/div[1]/div[2]/div[1]/div/div/div[2]/div[3]/div/div/button')))
 except:
+    print('could not find element')
     driver.quit()
     exit()
 
-sign_up_button2 = driver.find_element(by=By.XPATH, value = '/html/body/div[3]/div[1]/div[11]/div/div[2]/div/div[1]/div[2]/div[1]/div/div/div[2]/div[3]/div/div/button')
-sign_up_button2.click()
+""" sign_up_button2 = driver.find_elements(by=By.XPATH, value = '/html/body/div[3]/div[1]/div[11]/div/div[2]/div/div[1]/div[2]/div[1]/div/div/div[2]/div[3]/div/div/button')
+for x in sign_up_button2:
+    print(x.text)
+#sign_up_button2.click() """
 
 try: 
     sign_up_button2 = driver.find_element(by=By.XPATH, value = '/html/body/div[3]/div[1]/div[11]/div/div[2]/div/div[1]/div[2]/div[1]/div/div/div[2]/div[3]/div/div/button')
