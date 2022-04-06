@@ -28,7 +28,7 @@ events = {'WEC': 'WEC Fitness Center Registration',
 event_name = events[event]
 
 #validate time input, exits if incorrect --> could use a bit more fixing like checking if hour is valid
-def input_format_check():
+def input_format_check(registration_time):
     try:
         assert len(registration_time) == 8 and ('PM' in registration_time or 'AM' in registration_time) and registration_time[2] == ':' 
         print('time format valid')
@@ -75,7 +75,7 @@ def next_day():
     except:
         print("next_day failed")
 
-def find_event():
+def find_event(registration_time, event_name):
     try:
         event_names = driver.find_elements(by=By.XPATH, value='//*[@id="imlBodyMain"]/div/div[1]/div[2]/div[1]/div/div[5]/week-calendar/div[2]/div[2]/div/div')
         index = 0
@@ -154,12 +154,11 @@ def sign_up():
         exit()
 
 def registerForEvent(registrationTime, eventToRegister):
-    global registration_time
-    global event_name
     registration_time = registrationTime 
     event_name = events[eventToRegister] 
+    input_format_check(registration_time)
     open_webpage()
-    find_event()
+    find_event(registration_time, event_name)
     login()
     sign_up()
 
