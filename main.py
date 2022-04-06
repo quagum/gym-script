@@ -152,9 +152,9 @@ def sign_up():
 
 def main(registrationTime, eventToRegister):
     global registration_time
-    global event
+    global event_name
     registration_time = registrationTime 
-    event = eventToRegister 
+    event_name = events[eventToRegister] 
     open_webpage()
     find_event()
     login()
