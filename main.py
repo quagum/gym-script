@@ -8,8 +8,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from webdriver_manager.chrome import ChromeDriverManager
 from dotenv import load_dotenv
+from flask import Flask, jsonify
+from flask_restful import Resource, Api
 import os
 import time
+
 
 load_dotenv()
 
