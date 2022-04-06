@@ -1,15 +1,6 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support.ui import Select
-from webdriver_manager.chrome import ChromeDriverManager
-from dotenv import load_dotenv
-import os
-import time
+#from register import *
+from flask import Flask, jsonify
+from flask_restful import Resource, Api
 
 
 load_dotenv()
@@ -20,38 +11,20 @@ load_dotenv()
 registration_time = '03:00 PM'
 event = 'WEC'
 
-#full event names from shorthand
-events = {'WEC': 'WEC Fitness Center Registration', 
-          'Swim':'Open Swim', 
-          'Honors':'Warren St. Fitness Center Registration', 
-          'Tennis': 'Open Tennis Hours'}
-event_name = events[event]
+class status(Resource):    
+     def get(self):
+         try:
+            return {'data': 'Api running'}
+         except(error): 
+            return {'data': error}
 
-#validate time input, exits if incorrect --> could use a bit more fixing like checking if hour is valid
-def input_format_check():
-    try:
-        assert len(registration_time) == 8 and ('PM' in registration_time or 'AM' in registration_time) and registration_time[2] == ':' 
-        print('time format valid')
-    except:
-        print('time format invalid')
-        exit()
-    try:
-        assert event in events
-        print('event format is valid')
-    except:
-        print('event format invalid')
-        exit()
 
 #adds ublock for ad blocking
 op = Options()
 op.add_extension(r'C:\CSProjects\gym-registration\ublock.crx')
 
-#removes notifcations popup
-prefs = {"profile.default_content_setting_values.notifications" : 2, 
-        "credentials_enable_service": False,
-        "profile.password_manager_enabled": False}
-op.add_experimental_option("prefs",prefs)
 
+<<<<<<< HEAD
 #sets up chrome browser
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=op)
 
@@ -161,3 +134,5 @@ def registerForEvent(registrationTime, eventToRegister):
     login()
     sign_up()
 
+=======
+>>>>>>> origin/master
