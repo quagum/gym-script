@@ -14,8 +14,5 @@ class status(Resource):
          except(error): 
             return {'data': error}
 
-
 if __name__ == '__main__':
     app.run(debug=True)
-
-
