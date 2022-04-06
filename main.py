@@ -41,7 +41,7 @@ def input_format_check():
 
 #adds ublock for ad blocking
 op = Options()
-op.add_extension(r'C:\Users\charl\projects\gym-registration\ublock.crx')
+op.add_extension(r'C:\CSProjects\gym-registration\ublock.crx')
 
 #removes notifcations popup
 prefs = {"profile.default_content_setting_values.notifications" : 2, 
@@ -150,10 +150,14 @@ def sign_up():
         driver.quit()
         exit()
 
-def main():
+def main(registrationTime, eventToRegister):
+    global registration_time
+    global event
+    registration_time = registrationTime 
+    event = eventToRegister 
     open_webpage()
     find_event()
     login()
     sign_up()
 
-main()
+main("06:00 PM", "Tennis")
