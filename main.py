@@ -11,7 +11,10 @@ from dotenv import load_dotenv
 import os
 import time
 
+
 load_dotenv()
+
+
 
 #inputs || time in text format. may need to change later. 
 registration_time = '03:00 PM'
@@ -41,7 +44,7 @@ def input_format_check():
 
 #adds ublock for ad blocking
 op = Options()
-op.add_extension(r'C:\Users\charl\projects\gym-registration\ublock.crx')
+op.add_extension(r'C:\CSProjects\gym-registration\ublock.crx')
 
 #removes notifcations popup
 prefs = {"profile.default_content_setting_values.notifications" : 2, 
@@ -72,7 +75,7 @@ def next_day():
     except:
         print("next_day failed")
 
-def find_event():
+def find_event(registration_time, event_name):
     try:
         event_names = driver.find_elements(by=By.XPATH, value='//*[@id="imlBodyMain"]/div/div[1]/div[2]/div[1]/div/div[5]/week-calendar/div[2]/div[2]/div/div')
         index = 0
@@ -150,10 +153,11 @@ def sign_up():
         driver.quit()
         exit()
 
-def main():
+def registerForEvent(registrationTime, eventToRegister):
+    registration_time = registrationTime 
+    event_name = events[eventToRegister] 
     open_webpage()
-    find_event()
+    find_event(registration_time, event_name)
     login()
     sign_up()
 
-main()
