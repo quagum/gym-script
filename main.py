@@ -1,4 +1,4 @@
-#from register import *
+from register import *
 from flask import Flask, jsonify
 from flask_restful import Resource, Api
 
@@ -14,9 +14,5 @@ class status(Resource):
          except(error): 
             return {'data': error}
 
-
-#adds ublock for ad blocking
-op = Options()
-op.add_extension(r'C:\CSProjects\gym-registration\ublock.crx')
-
-
+if __name__ == '__main__':
+    app.run(debug=True)
