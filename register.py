@@ -18,7 +18,7 @@ import time
 #adds ublock for ad blocking 
 #necessary for low page load times
 op = Options()
-op.add_extension(r'C:\Users\quagu\projects\gym-registration\ublock.crx')#NEED TO HARDCODE EXTENSION PATH 
+op.add_extension(r'\ublock.crx')#NEED TO HARDCODE EXTENSION PATH 
 
 #removes notifcations popup
 prefs = {"profile.default_content_setting_values.notifications" : 2, 
