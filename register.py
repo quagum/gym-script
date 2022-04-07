@@ -1,3 +1,4 @@
+from atexit import register
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -5,46 +6,19 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support.ui import Select
 from webdriver_manager.chrome import ChromeDriverManager
 from dotenv import load_dotenv
 import os
 import time
 
+#--------------------------
+#---=== DRIVER SETUP ===---
+#--------------------------
 
-load_dotenv()
-
-
-
-#inputs || time in text format. may need to change later. 
-registration_time = '03:00 PM'
-event = 'WEC'
-
-#full event names from shorthand
-events = {'WEC': 'WEC Fitness Center Registration', 
-          'Swim':'Open Swim', 
-          'Honors':'Warren St. Fitness Center Registration', 
-          'Tennis': 'Open Tennis Hours'}
-event_name = events[event]
-
-#validate time input, exits if incorrect --> could use a bit more fixing like checking if hour is valid
-def input_format_check(registration_time):
-    try:
-        assert len(registration_time) == 8 and ('PM' in registration_time or 'AM' in registration_time) and registration_time[2] == ':' 
-        print('time format valid')
-    except:
-        print('time format invalid')
-        exit()
-    try:
-        assert event in events
-        print('event format is valid')
-    except:
-        print('event format invalid')
-        exit()
-
-#adds ublock for ad blocking
+#adds ublock for ad blocking 
+#necessary for low page load times
 op = Options()
-op.add_extension(r'C:\CSProjects\gym-registration\ublock.crx')
+op.add_extension(r'C:\Users\quagu\projects\gym-registration\ublock.crx')#NEED TO HARDCODE EXTENSION PATH 
 
 #removes notifcations popup
 prefs = {"profile.default_content_setting_values.notifications" : 2, 
@@ -54,6 +28,40 @@ op.add_experimental_option("prefs",prefs)
 
 #sets up chrome browser
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=op)
+
+#-------------------------------
+#---=== INITIAL VARIABLES ===---
+#-------------------------------
+register_time = ''
+register_event = ''
+
+#---------------------
+#---=== METHODS ===---
+#---------------------
+
+def input_formatter(input_time, input_event):
+    #validate time input, exits if incorrect
+    #could use a bit more fixing like checking if hour is valid
+
+    events = {'WEC': 'WEC Fitness Center Registration', 
+        'Swim':'Open Swim', 
+        'Honors':'Warren St. Fitness Center Registration', 
+        'Tennis': 'Open Tennis Hours'}
+    try:
+        assert len(input_time) == 8 and ('PM' in input_time or 'AM' in input_time) and input_time[2] == ':' 
+        register_time = input_time
+        print('time format valid')
+    except:
+        print('time format invalid')
+        exit()
+    try:
+        assert input_event in events
+        #converts from shorthand to proper full event names used by imleagues
+        register_event = events[input_event]
+        print('event format is valid')
+    except:
+        print('event format invalid')
+        exit()
 
 def open_webpage():
     #open up webpage
@@ -67,21 +75,25 @@ def open_webpage():
         driver.quit()
         exit()
 
-#find_event will fail if next_day is used since XPATH is different for the next day's page --> work on making find_event reactive?
 def next_day():
+    #CURRENTLY NOT IN USE
+    #made to switch to a different day's page to scrape 
+    #find_event will fail if next_day is used since XPATH is different for the next day's page 
+    #work on making find_event reactive?
+
     try:
         next = driver.find_element(by=By.XPATH, value='//*[@id="imlBodyMain"]/div/div[1]/div[2]/div[1]/div/div[5]/week-calendar/div[1]/div[1]/table/tbody/tr/td[1]/table/tbody/tr/td[1]/div/button[2]')
         next.click()
     except:
         print("next_day failed")
 
-def find_event(registration_time, event_name):
+def find_event(register_time, event_name):
     try:
         event_names = driver.find_elements(by=By.XPATH, value='//*[@id="imlBodyMain"]/div/div[1]/div[2]/div[1]/div/div[5]/week-calendar/div[2]/div[2]/div/div')
         index = 0
         for x in range(len(event_names)):
             text = event_names[x].text
-            if (event_name in text and registration_time in text):
+            if (event_name in text and register_time in text):
                 index = x
     except:
         print("event_names could not generate")
@@ -91,11 +103,12 @@ def find_event(registration_time, event_name):
         targeted_button = driver.find_element(by=By.XPATH, value = '//*[@id="imlBodyMain"]/div/div[1]/div[2]/div[1]/div/div[5]/week-calendar/div[2]/div[2]/div/div[' + str(index+1) +']/a/div/div[2]/div[1]/button' )
         targeted_button.click()
     except:
-        print("find_event failed")
+        print("event is not available")
         driver.quit()
         exit()
 
-def login():    
+def login():   
+    load_dotenv() 
     try:
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@title="Select School/Organization"]')))
         dropdown = driver.find_element(by=By.XPATH, value = '//*[@title="Select School/Organization"]')
@@ -128,8 +141,7 @@ def login():
     try:
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "password")))
     except:
-        print('password load error')
-        
+        print('password inputbox load error')
         driver.quit()
         exit()
 
@@ -139,7 +151,7 @@ def login():
         password_box.send_keys(password)
         password_box.send_keys(Keys.RETURN)
     except:
-        print('password not working')
+        print('password input not working')
         driver.quit()
         exit()
 
@@ -153,12 +165,14 @@ def sign_up():
         driver.quit()
         exit()
 
-def registerForEvent(registrationTime, eventToRegister):
-    registration_time = registrationTime 
-    event_name = events[eventToRegister] 
-    input_format_check(registration_time)
+def run(input_time, input_event):
+    input_formatter(input_time, input_event)
     open_webpage()
-    find_event(registration_time, event_name)
+    find_event(register_time, register_event)
     login()
     sign_up()
 
+#------------------
+#---=== MAIN ===---
+#------------------
+run("10:00 AM", "WEC")
