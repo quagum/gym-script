@@ -30,36 +30,31 @@ op.add_experimental_option("prefs",prefs)
 #sets up chrome browser
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=op)
 
-#-------------------------------
-#---=== INITIAL VARIABLES ===---
-#-------------------------------
-register_time = ''
-register_event = ''
-
 #---------------------
 #---=== METHODS ===---
 #---------------------
-
-def input_formatter(input_time, input_event):
+def time_formatter(input_time):
     #validate time input, exits if incorrect
     #could use a bit more fixing like checking if hour is valid
-
+    try:
+        assert len(input_time) == 8 and ('PM' in input_time or 'AM' in input_time) and input_time[2] == ':' 
+        print('time format valid')
+        register_time = input_time 
+        return register_time
+    except:
+        print('time format invalid')
+        exit()
+def event_formatter(input_event):
     events = {'WEC': 'WEC Fitness Center Registration', 
         'Swim':'Open Swim', 
         'Honors':'Warren St. Fitness Center Registration', 
         'Tennis': 'Open Tennis Hours'}
     try:
-        assert len(input_time) == 8 and ('PM' in input_time or 'AM' in input_time) and input_time[2] == ':' 
-        register_time = input_time
-        print('time format valid')
-    except:
-        print('time format invalid')
-        exit()
-    try:
         assert input_event in events
         #converts from shorthand to proper full event names used by imleagues
         register_event = events[input_event]
         print('event format is valid')
+        return register_event
     except:
         print('event format invalid')
         exit()
@@ -167,7 +162,8 @@ def sign_up():
         exit()
 
 def run(input_time, input_event):
-    input_formatter(input_time, input_event)
+    register_time = time_formatter(input_time)
+    register_event = event_formatter(input_event)
     open_webpage()
     find_event(register_time, register_event)
     login()
@@ -176,4 +172,4 @@ def run(input_time, input_event):
 #------------------
 #---=== MAIN ===---
 #------------------
-run("03:00 PM", "WEC")
+run("02:00 PM", "WEC")
