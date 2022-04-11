@@ -15,10 +15,11 @@ import time
 #---=== DRIVER SETUP ===---
 #--------------------------
 
+#NEED TO HARDCODE EXTENSION PATH 
 #adds ublock for ad blocking 
 #necessary for low page load times
 op = Options()
-op.add_extension(r'\ublock.crx')#NEED TO HARDCODE EXTENSION PATH 
+op.add_extension(r'C:\Users\quagu\projects\gym-registration\ublock.crx')
 
 #removes notifcations popup
 prefs = {"profile.default_content_setting_values.notifications" : 2, 
@@ -175,4 +176,4 @@ def run(input_time, input_event):
 #------------------
 #---=== MAIN ===---
 #------------------
-run("10:00 AM", "WEC")
+run("03:00 PM", "WEC")
