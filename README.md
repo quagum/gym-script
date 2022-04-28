@@ -1,8 +1,9 @@
 # gym-registration
 
-Script to automate signing up for a session at the gym.
+Script to automate signing up for a session at the NJIT gym through IMLEAGUES.
 
-Using selenium, a browser is launched to sign up for the specified gym slot on imleague
+Input creditionals in .env 
+Hardcode ublock extension in register.py
 
 Next steps: 
 Setup ublock extension file path across different systems

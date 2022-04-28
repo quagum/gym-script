@@ -153,7 +153,7 @@ def login():
 
 def sign_up():
     try:
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[3]/div[1]/div[11]/div/div[2]/div/div[1]/div[2]/div[1]/div/div/div[2]/div[3]/div/div/button')))
+        WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[3]/div[1]/div[11]/div/div[2]/div/div[1]/div[2]/div[1]/div/div/div[2]/div[3]/div/div/button')))
         sign_up_button2 = driver.find_element(by=By.XPATH, value = '/html/body/div[3]/div[1]/div[11]/div/div[2]/div/div[1]/div[2]/div[1]/div/div/div[2]/div[3]/div/div/button')
         sign_up_button2.click()
     except:
@@ -168,8 +168,9 @@ def run(input_time, input_event):
     find_event(register_time, register_event)
     login()
     sign_up()
+    driver.quit()
 
 #------------------
 #---=== MAIN ===---
 #------------------
-run("02:00 PM", "WEC")
+run("10:00 AM", "WEC")
