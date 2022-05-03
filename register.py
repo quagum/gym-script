@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 from dotenv import load_dotenv
+import tkinter as tk
 import os
 import time
 
@@ -19,7 +20,7 @@ import time
 #adds ublock for ad blocking 
 #necessary for low page load times
 op = Options()
-op.add_extension(r'C:\Users\quagu\projects\gym-registration\ublock.crx')
+op.add_extension(r'C:\Users\charl\projects\gym-script\ublock.crx')
 
 #removes notifcations popup
 prefs = {"profile.default_content_setting_values.notifications" : 2, 
@@ -94,14 +95,13 @@ def find_event(register_time, event_name):
     except:
         print("event_names could not generate")
         driver.quit()
-        exit()
+
     try: 
         targeted_button = driver.find_element(by=By.XPATH, value = '//*[@id="imlBodyMain"]/div/div[1]/div[2]/div[1]/div/div[5]/week-calendar/div[2]/div[2]/div/div[' + str(index+1) +']/a/div/div[2]/div[1]/button' )
         targeted_button.click()
     except:
         print("event is not available")
         driver.quit()
-        exit()
 
 def login():   
     load_dotenv() 
@@ -112,7 +112,6 @@ def login():
     except:
         print('school dropdown not being found')
         driver.quit()
-        exit()
 
     try:
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@title="search box"]')))
@@ -122,7 +121,6 @@ def login():
     except:
         print('school search not working')
         driver.quit()
-        exit()
 
     try:
         email_box = driver.find_element(by=By.XPATH, value = '//*[@name="email"]')
@@ -132,14 +130,12 @@ def login():
     except:
         print('email input not working')
         driver.quit()
-        exit()
 
     try:
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "password")))
     except:
         print('password inputbox load error')
         driver.quit()
-        exit()
 
     try:
         password = os.getenv("password")
@@ -149,7 +145,6 @@ def login():
     except:
         print('password input not working')
         driver.quit()
-        exit()
 
 def sign_up():
     try:
@@ -159,18 +154,30 @@ def sign_up():
     except:
         print('sign up button not found or working')
         driver.quit()
-        exit()
+
+def popup():
+    window = tk.Tk() 
+    window.title("Success!")
+    label = tk.Label(window, text="Signed Up!")
+    label.pack(side="top", fill="x", pady=10)
+    exit = tk.Button(window, text="Close", command = window.destroy)
+    exit.pack()
+    window.mainloop()
 
 def run(input_time, input_event):
-    register_time = time_formatter(input_time)
-    register_event = event_formatter(input_event)
-    open_webpage()
-    find_event(register_time, register_event)
-    login()
-    sign_up()
-    driver.quit()
+    try: 
+        register_time = time_formatter(input_time)
+        register_event = event_formatter(input_event)
+        open_webpage()
+        find_event(register_time, register_event)
+        login()
+        sign_up()
+        popup()
+        driver.quit()
+    except:
+        exit
 
 #------------------
 #---=== MAIN ===---
 #------------------
-run("10:00 AM", "WEC")
+run("02:00 PM", "WEC")
