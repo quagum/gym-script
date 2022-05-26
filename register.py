@@ -20,7 +20,7 @@ import time
 #adds ublock for ad blocking 
 #necessary for low page load times
 op = Options()
-op.add_extension(r'C:\Users\charl\projects\gym-script\ublock.crx')
+op.add_extension('ublock.crx')
 
 #removes notifcations popup
 prefs = {"profile.default_content_setting_values.notifications" : 2, 
@@ -180,4 +180,4 @@ def run(input_time, input_event):
 #------------------
 #---=== MAIN ===---
 #------------------
-run("02:00 PM", "WEC")
+run("02:30 PM", "WEC")
